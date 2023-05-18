@@ -1,6 +1,9 @@
 const mongoose = require("mongoose")
+const env = require("dotenv")
 
-mongoose.connect("mongodb+srv://yamakalyan:3120@merncluster.hoxd1ij.mongodb.net/mern?retryWrites=true&w=majority",
+env.config()
+
+mongoose.connect(process.env.URL,
  {useNewUrlParser : true})
 
 try {
