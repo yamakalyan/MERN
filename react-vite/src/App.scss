@@ -1,0 +1,15 @@
+
+body{
+    margin: 0;
+    padding: 0;
+
+}
+.app-main{
+    background: #1e1e20;
+    color: white;
+    height: 100vh;
+    background-position: center;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+}

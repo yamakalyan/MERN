@@ -1,21 +1,37 @@
+import { useEffect, useState } from "react";
 import "../navbar/Navbar.scss"
+import { NavLink } from "react-router-dom";
 export default function Navbar() {
+  const [active, setActive] = useState(false)
+
+  const isActive =()=>{
+    window.scrollY > 0 ? setActive(true) : setActive(false)
+  }
+
+  useEffect(()=>{
+   window.addEventListener("scroll", isActive)
+  }, [])
   return (
     <>
       <div className="container">
         <header>
+            <div className="box">
             <div className="logo">
-                <span>logo</span>
+                <span><a href="#home">MERN application</a></span>
             </div>
             <div className="links-main">
                 <ul className="links-ul">
-                    <li><a>1</a></li>
-                    <li><a>2</a></li>
-                    <li><a>3</a></li>
-                    <li><a>4</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#info">Information</a></li>
+                    <li><a href="#posts">Posts</a></li>
+                    <li><NavLink to="/login">Login</NavLink></li>
+                    <li><NavLink to="/reg">Register</NavLink></li>
                 </ul>
             </div>
+            </div>
+
         </header>
+        {active &&
         <nav>
             <div className="nav-main">
                 <ul className="nav-ul">
@@ -26,6 +42,7 @@ export default function Navbar() {
                 </ul>
             </div>
         </nav>
+}
       </div>
     </>
   );

@@ -1,0 +1,47 @@
+.container-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    .container-box{
+        background:linear-gradient(90deg, rgb(226, 113, 113), rgb(141, 141, 236));
+        padding: 50px;
+        border-radius: 10px;
+
+        .input-list{
+            .input-title{
+                text-align: center;
+            }
+            .input-text{
+                padding: 15px;
+                input{
+                    padding: 10px;
+                    border-radius: 5px;
+                    border: none;
+                }
+            }
+            .input-password{
+                padding: 15px;
+                input{
+                    padding: 10px;
+                    border-radius: 5px;
+                    border: none;
+                }
+            }
+            .input-btn{
+                display: flex;
+                justify-content: center;
+                input{
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+
+                    &:hover{
+                        background-color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
