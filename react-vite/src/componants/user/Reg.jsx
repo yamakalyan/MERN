@@ -6,9 +6,8 @@ export default function Reg() {
   const [mobile, setMobile] = useState("")
   const [password, setPassword] = useState("")
 
-  const regUser =()=>{
-    console.log("login clicked")
-
+  const regUser =(e)=>{
+    e.preventDefault()
     const reg =async()=>{
       const options ={
         method : "POST",

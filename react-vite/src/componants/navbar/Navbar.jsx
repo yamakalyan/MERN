@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import "../navbar/Navbar.scss"
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Auth } from "../Authentications/AuthProvider";
+
 export default function Navbar() {
   const [active, setActive] = useState(false)
+  const authUser = Auth()
+  const navigator = useNavigate()
 
   const isActive =()=>{
     window.scrollY > 0 ? setActive(true) : setActive(false)
@@ -17,15 +21,31 @@ export default function Navbar() {
         <header>
             <div className="box">
             <div className="logo">
-                <span><a href="#home">MERN application</a></span>
+                <span><Link to="/">MERN application</Link></span>
             </div>
             <div className="links-main">
                 <ul className="links-ul">
+                  
+                    {authUser.user ?
+                    <>
+                    <li><NavLink to="/profile">Profile</NavLink></li>
+                    <li><NavLink to="/posts">Posts</NavLink></li>
+                    </>
+                    :
+                    <>
+                    <button className="btn"><NavLink to="/login">Login</NavLink></button>
+                    <button className="btn"><NavLink to="/reg">Register</NavLink></button>
+                    </>
+                    }
+                    <li><NavLink to="/info">Information</NavLink></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#info">Information</a></li>
-                    <li><a href="#posts">Posts</a></li>
-                    <li><NavLink to="/login">Login</NavLink></li>
-                    <li><NavLink to="/reg">Register</NavLink></li>
+                    {authUser.user &&
+                    
+                    <li><button style={{padding : "5px", border : "none", borderRadius : "3px"}} onClick={()=>{
+                      navigator("/login")
+                      localStorage.removeItem("token")
+                      window.location.reload(false)
+                    }}>Log-out</button></li>}
                 </ul>
             </div>
             </div>

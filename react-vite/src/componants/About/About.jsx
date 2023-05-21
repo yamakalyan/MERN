@@ -3,32 +3,33 @@ export default function About() {
   return (
     <>
     <div className="container-about" id="about">
-            <h1>About</h1><hr/>
+            <h2 style={{textAlign : "center"}}>About</h2>
         <div className="container-box">
-            <ul>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-            </ul>
-            <ul>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-            </ul>
-            <ul>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-            </ul>
-            <ul>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-                <li>test</li>
-            </ul>
+            <div className="row">
+                <ul>
+                    <li>Certification</li>
+                    <li>privacy</li>
+                    <li>Contact</li>
+                    <li>Address</li>
+                </ul>
+            </div>
+            <div className="row">
+                <ul>
+                    <li>Certification</li>
+                    <li>privacy</li>
+                    <li>Contact</li>
+                    <li>Address</li>
+                </ul>
+            </div>
+            <div className="row">
+                <ul>
+                    <li>Certification</li>
+                    <li>privacy</li>
+                    <li>Contact</li>
+                    <li>Address</li>
+                </ul>
+            </div>
+           
         </div>
     </div>
       

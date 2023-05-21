@@ -1,6 +1,7 @@
 const express = require("express")
 const user = express.Router()
 const userSchema = require("../models/users.model")
+const jwt = require("jsonwebtoken")
 
 // LIST OF USERS
 user.get("/", async (req, res) => {
@@ -51,13 +52,35 @@ user.post("/create", async (req, res) => {
             password: req.body.password
         })
 
-        const results = await newUser.save()
+        const checkingUSer = await userSchema.find({ email: req.body.email })
 
-        res.status(200).json({
-            success: true,
-            message: "User created succesfully",
-            results
-        })
+        if (checkingUSer.length == 0) {
+
+            const checkingMobile = await userSchema.find({ mobile: req.body.mobile })
+
+            if (checkingMobile.length == 0) {
+                const results = await newUser.save()
+                res.status(200).json({
+                    success: true,
+                    message: "User created succesfully",
+                    results
+                })
+            } else {
+                res.status(400).json({
+                    success: false,
+                    message: "User mobile already exist, Try new another",
+                    checkingMobile
+                })
+            }
+
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "User email already exist, Try new another",
+                checkingUSer
+            })
+
+        }
 
     } catch (error) {
         res.status(500).json({
@@ -111,5 +134,88 @@ user.delete("/delete/:id", async (req, res) => {
     }
 })
 
+// LOGIN USER
+user.post("/login", async(req, res)=>{
+    try{
+        const check = await userSchema.find({email : req.body.email})
+
+        if (check.length == 0) {
+            res.status(400).json({
+                success : false,
+                message : "Please enter correct email or Register."
+            })
+        } else {
+            const takingPAssword = check[0].password
+
+            if (takingPAssword == req.body.password) {
+
+                const user = {
+                    time : Date(),
+                    name : check[0].name,
+                    email : check[0].email,
+                    mobile : check[0].mobile
+                }
+
+                const token = jwt.sign(user, process.env.JWT_SECREAT_KEY, {expiresIn : process.env.JWT_EXPIREIN})
+
+                res.status(200).json({
+                    success : true,
+                    message : "Login succesfully",
+                    check,
+                    token
+                })
+            } else {
+                res.status(400).json({
+                    success : false,
+                    message : "Incorrect password"
+                })
+            }
+        }
+
+    }
+    catch(error){
+        res.status(500).json({
+            success : false,
+            error
+        })
+    }
+})
+
+// AUTHENTICATION
+user.post("/auth", async(req, res)=>{
+    try {
+        const headerKey = process.env.JWT_HEADER
+        const secureKey = process.env.JWT_SECREAT_KEY
+
+        const header = req.header(headerKey)
+        const verify = jwt.verify(header, secureKey)
+
+        if (verify) {
+
+            const email = verify.email
+            const mobile = verify.mobile
+            const usercheck = await userSchema.find({email : email , mobile : mobile})
+
+            res.status(200).json({
+                success : true,
+                message : "User successfully authenicated",
+                usercheck
+            })
+
+        } else {
+            res.status(401).json({
+                success : false,
+                message : "invalidToken"
+            })
+
+        }
+    } catch (error){
+        res.status(500).json({
+            success : false,
+            error
+        })
+
+    }
+})
 
 module.exports = user

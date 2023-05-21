@@ -1,20 +1,24 @@
 .container-home{
-    height: 100vh;
+    margin: 5%;
     display: flex;
     justify-content: center;
+    align-items: center;
 
-    .container-box{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 50px;
+    .box{
         width: 1400px;
+        columns: 2;
 
-        .right{
-                flex: 1;
-        }
-        .left{
-                flex: 1;
+        
+        .post{
+            .heading{
+                color: white;
+            }
+            color: #908E9B;
+            border: 2px solid rgb(236, 176, 176);
+            padding: 5%;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            
         }
     }
 }

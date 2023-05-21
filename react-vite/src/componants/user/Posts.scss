@@ -1,0 +1,32 @@
+.container-posts{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // margin: 10%;
+    .box{
+        width: 1400px;
+        columns: auto;
+
+        .main-heading{
+            text-align: center;
+            position: sticky;
+            top: 60px;
+            background: #1e1e20;
+        }
+
+        .post{
+            .heading{
+                color: white;
+            }
+            // flex: 1;
+            color: #908E9B;
+            border: 2px solid rgb(236, 176, 176);
+            padding: 5%;
+            // margin: 5%;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            
+        }
+
+    }
+}

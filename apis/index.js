@@ -3,7 +3,9 @@ const app = express()
 const env = require("dotenv")
 const db = require("./Database/mongoDb")
 const users = require("./Controllers/users")
+const cors = require("cors")
 
+app.use(cors({origin : "*"}))
 env.config()
 
 app.listen(3500, (err, results)=>{

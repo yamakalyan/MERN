@@ -1,10 +1,15 @@
+import { useNavigate } from "react-router-dom"
 import "./Login.scss"
 import { useState } from "react"
 
 export default function Login() {
   const [email, setEmail]= useState("")
   const [password, setPassword] = useState("")
-  const loginUser =()=>{
+  const navigator = useNavigate()
+
+
+  const loginUser =(e)=>{
+    e.preventDefault()
     const login =async()=>{
       const options ={
         method : "POST",
@@ -19,8 +24,12 @@ export default function Login() {
       .then(data =>{
         if (data.success) {
           alert(data.message)
+          localStorage.setItem("token",data.token)
+          navigator("/")
         } else {
           alert(data.message)
+          localStorage.removeItem("token")
+          navigator("/login")
         }
       })
     }
