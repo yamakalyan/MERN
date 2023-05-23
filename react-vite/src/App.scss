@@ -2,10 +2,10 @@
 body{
     margin: 0;
     padding: 0;
-    color: white;
+    // color: white;
     a{
         text-decoration: none;
-        color: white;
+        color: #cbc8db;
     }
     font-family: 'Rubik', sans-serif;
 
@@ -18,4 +18,8 @@ body{
     scroll-behavior: smooth;
     scroll-snap-type: y mandatory;
     overflow-y: auto;
+}
+.active{
+    // font-weight: bold;
+    color: white;
 }

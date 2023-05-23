@@ -3,4 +3,30 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+
+    .container-profile{
+        width: 1400px;
+        .box{
+            display: flex;
+            justify-content: space-around;
+            // columns: 2;
+
+            .img-dev{
+                width: 450px;
+                border-radius: 15px;
+            }
+
+            .personal-info{
+                border: 2px solid rgb(136, 175, 224);
+                padding: 25px;
+                border-radius: 15px;
+                ul{
+                    gap: 15px;
+                    li{
+                        letter-spacing: 4px;
+                    }
+                }
+            }
+        }
+    }
 }

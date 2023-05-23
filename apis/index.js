@@ -4,8 +4,10 @@ const env = require("dotenv")
 const db = require("./Database/mongoDb")
 const users = require("./Controllers/users")
 const cors = require("cors")
+const post = require("./Controllers/posts")
 
 app.use(cors({origin : "*"}))
+
 env.config()
 
 app.listen(3500, (err, results)=>{
@@ -16,6 +18,8 @@ app.listen(3500, (err, results)=>{
     }
 })
 
+
 app.use(express.json())
 
 app.use("/user", users)
+app.use("/post", post)

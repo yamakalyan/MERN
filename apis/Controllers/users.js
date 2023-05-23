@@ -1,6 +1,6 @@
 const express = require("express")
 const user = express.Router()
-const userSchema = require("../models/users.model")
+const userSchema = require("../models/usersModel")
 const jwt = require("jsonwebtoken")
 
 // LIST OF USERS
@@ -26,13 +26,28 @@ user.get("/", async (req, res) => {
 // UNIQUE USER WITH PARAMS ID
 user.get("/:id", async (req, res) => {
     try {
-        const getUserWithId = await userSchema.findById(req.params.id)
+        const headerKey = process.env.JWT_HEADER
+        const secureKey = process.env.JWT_SECREAT_KEY
 
-        res.status(200).json({
-            success: true,
-            message: "User found succesfully",
-            getUserWithId
-        })
+        const header = req.header(headerKey)
+        const verify = jwt.verify(header, secureKey)
+
+        if (verify){
+            const userID = verify.user_id
+            const getUserWithId = await userSchema.findById(userID)
+
+            res.status(200).json({
+                success: true,
+                message: "User found succesfully",
+                getUserWithId
+            })
+        }else{
+            res.status(500).json({
+                success: false,
+                error
+            })
+        }
+
 
     } catch (error) {
         res.status(500).json({
@@ -42,6 +57,39 @@ user.get("/:id", async (req, res) => {
     }
 })
 
+// PROFILE 
+user.get("/user/profile", async (req, res) => {
+    try {
+        const headerKey = process.env.JWT_HEADER
+        const secureKey = process.env.JWT_SECREAT_KEY
+
+        const header = req.header(headerKey)
+        const verify = jwt.verify(header, secureKey)
+
+        if (verify){
+            const userID = verify.user_id
+            const profile = await userSchema.findById(userID)
+
+            res.status(200).json({
+                success: true,
+                message: "User found",
+                profile
+            })
+        }else{
+            res.status(500).json({
+                success: false,
+                message : "InvalidToken"
+            })
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        })
+    }
+})
 // USER CREATION
 user.post("/create", async (req, res) => {
     try {
@@ -151,6 +199,7 @@ user.post("/login", async(req, res)=>{
 
                 const user = {
                     time : Date(),
+                    user_id : check[0]._id,
                     name : check[0].name,
                     email : check[0].email,
                     mobile : check[0].mobile

@@ -1,0 +1,18 @@
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    background: transparent;
+
+    .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        h1{
+            color: rgb(223, 205, 205);
+            font-weight: bold;
+        }
+    }
+}

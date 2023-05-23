@@ -12,3 +12,5 @@ try {
 } catch (error) {
     console.log(error)
 }
+
+// async and await are mandatory in mongodb connections and api calls

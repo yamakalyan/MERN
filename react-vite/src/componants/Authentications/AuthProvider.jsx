@@ -1,17 +1,21 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const authContext = createContext()
 
 export  const AuthProvider = ({children})=> {
     const [user, setUser] = useState(false)
     const token = localStorage.getItem("token")
+    const navigator = useNavigate()
 
     useEffect(()=>{
+        if (token !== null || undefined) {
+            
         const authentication = async()=>{
 
             await fetch("http://localhost:3500/user/auth", {
                 method : "POST",
-                headers : { "Content-Type" : "application/json", "header_kd" : token}
+                headers : { "Content-Type" : "application/json", "header_kn" : token}
             })
             .then(res =>res.json())
             .then(data =>{
@@ -23,6 +27,9 @@ export  const AuthProvider = ({children})=> {
             })
         }
        return ()=> authentication()
+    }else{
+        navigator("/")
+    }
     }, [])
     
   return  <authContext.Provider value={{user}}>{children}</authContext.Provider>

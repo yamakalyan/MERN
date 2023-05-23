@@ -23,11 +23,9 @@ export default function Login() {
       .then(res =>res.json())
       .then(data =>{
         if (data.success) {
-          alert(data.message)
           localStorage.setItem("token",data.token)
           navigator("/")
         } else {
-          alert(data.message)
           localStorage.removeItem("token")
           navigator("/login")
         }

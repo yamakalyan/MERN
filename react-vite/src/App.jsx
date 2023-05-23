@@ -10,7 +10,9 @@ import Profile from "./componants/user/Profile";
 import Posts from "./componants/user/Posts";
 import { AuthProvider } from "./componants/Authentications/AuthProvider";
 import Authentication from "./componants/Authentications/Authentication";
+
 function App() {
+
   return (
     <div className="app-main">
       <BrowserRouter>
