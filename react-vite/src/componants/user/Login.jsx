@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import "./Login.scss"
 import { useState } from "react"
+import { ServiceUrl } from "../Helpers/Help"
 
 export default function Login() {
   const [email, setEmail]= useState("")
   const [password, setPassword] = useState("")
   const navigator = useNavigate()
   const [msg,setMsg] = useState("")
+  const url = ServiceUrl()
 
 
   const loginUser =(e)=>{
@@ -20,7 +22,7 @@ export default function Login() {
           password : password
         })
       }
-      await fetch("http://localhost:3500/user/login", options)
+      await fetch(url +  "user/login", options)
       .then(res =>res.json())
       .then(data =>{
         if (data.success) {

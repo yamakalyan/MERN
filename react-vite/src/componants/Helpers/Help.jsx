@@ -1,3 +1,3 @@
 export const ServiceUrl =()=>{
-return  "http://localhost:3500/"
+return  "https://mern-socialmedia-7xf8.onrender.com/"
 }

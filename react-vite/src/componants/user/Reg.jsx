@@ -1,10 +1,13 @@
 import { useState } from "react"
 import "./Reg.scss"
+import { ServiceUrl } from "../Helpers/Help"
 export default function Reg() {
   const [name, setName] = useState("")
   const [email, setEmail]= useState("")
   const [mobile, setMobile] = useState("")
   const [password, setPassword] = useState("")
+
+  const url = ServiceUrl()
 
   const regUser =(e)=>{
     e.preventDefault()
@@ -19,7 +22,7 @@ export default function Reg() {
           password : password
         })
       }
-      await fetch("http://localhost:3500/user/create", options)
+      await fetch(url + "user/create", options)
       .then(res =>res.json())
       .then(data =>{
         if (data.success) {
