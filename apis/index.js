@@ -11,7 +11,7 @@ app.use(cors({origin : "*"}))
 
 env.config()
 
-app.listen(3500, (err, results)=>{
+app.listen(process.env.PORT | 3500, (err, results)=>{
     if (err) {
         console.log("App not responding")
     } else {
