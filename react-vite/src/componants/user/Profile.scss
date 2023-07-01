@@ -1,32 +1,92 @@
-.profile{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 
-    .container-profile{
-        width: 1400px;
-        .box{
-            display: flex;
-            justify-content: space-around;
-            // columns: 2;
+  .container-profile {
+    width: 1400px;
+    .box {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      // columns: 2;
 
-            .img-dev{
-                width: 450px;
-                border-radius: 15px;
-            }
+      .img-dev {
+        width: 450px;
+        border-radius: 15px;
+      }
 
-            .personal-info{
-                border: 2px solid rgb(136, 175, 224);
-                padding: 25px;
-                border-radius: 15px;
-                ul{
-                    gap: 15px;
-                    li{
-                        letter-spacing: 4px;
-                    }
-                }
-            }
+      .personal-info {
+        border: 2px solid rgb(136, 175, 224);
+        padding: 25px;
+        border-radius: 15px;
+        max-width: 100%;
+        // flex: 1;
+        width: 400px;
+        height: 400px;
+        overflow: hidden;
+        ul {
+          gap: 15px;
+          li {
+            letter-spacing: 4px;
+          }
         }
+        .btn-group {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .btn-profile {
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            background: #bcb9b9;
+          }
+        }
+
+        .edit-section {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 15px;
+          .input-div {
+            .input {
+              padding: 10px;
+            }
+          }
+          .btn-div {
+            text-align: center;
+            .btn {
+              border: none;
+              padding: 8px;
+              border-radius: 5px;
+              background: #7fff7b;
+            }
+          }
+        }
+
+        .following-box {
+            overflow: scroll;
+            height: 100%;
+            overflow-x: hidden;
+            .following-section {
+            .list {
+              padding: 10px;
+              border-radius: 15px;
+              margin: 10px 0px;
+              border: 2px solid rgb(149, 255, 149);
+              span {
+                button {
+                  padding: 5px;
+                  border-radius: 5px;
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  }
 }

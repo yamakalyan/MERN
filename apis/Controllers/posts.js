@@ -1,19 +1,53 @@
 const express = require("express")
 const posts = express()
 const postSchema = require("../models/postModel")
-const postActionSchema = require("../models/postActionsModel")
+const postLikeSchema = require("../models/postLikesModel")
 const jwt = require("jsonwebtoken")
 
 
 // GET ALL POSTS LIST
 posts.get("/", async(req, res)=>{
+
     try {
-        const findAll = await postSchema.find()
-        res.status(200).json({
-            success : true,
-            message : "Successfully found all posts",
-            findAll
+    const headerKEy = process.env.JWT_HEADER
+    const secureKEy = process.env.JWT_SECREAT_KEY
+
+    const header = req.header(headerKEy)
+    const verify = jwt.verify(header, secureKEy)
+    if (verify) {
+
+            const findAll = await postSchema.find()
+
+            const results = []
+
+            for(const postInfo of findAll){
+                const details = await postLikeSchema.findOne({postId : postInfo._id})
+                results.push(postInfo)
+                results.push(details)
+            }
+// if you make const to var and try to send response in res.json only one result will com not looped results remember.
+            if (findAll.length == 0 | findAll == null| undefined ) {
+                res.status(400).json({
+                    success : false,
+                    message : "No Posts found"
+                })
+            } else {
+                res.status(200).json({
+                    success : true,
+                    message : "Found posts",
+                    findAll,
+                    results
+                })
+          
+            }
+
+    } else {
+        res.status(401).json({
+            success : false,
+            message : "invalidToken"
         })
+    }
+
     } catch (error) {
         res.status(500).json({
             success : false,
@@ -25,13 +59,36 @@ posts.get("/", async(req, res)=>{
 // GET UNIQUE POST WITH POST_ID 
 posts.get("/:id", async(req, res)=>{
     try {
-        const findPost = await postSchema.findById(req.params.id)
 
-        res.status(200).json({
-            success : true,
-            message : "Successfully found post",
-            findPost
-        })
+        const headerKEy = process.env.JWT_HEADER
+        const secureKEy = process.env.JWT_SECREAT_KEY
+    
+        const header = req.header(headerKEy)
+        const verify = jwt.verify(header, secureKEy)
+        if (verify) {
+
+            const findPost = await postSchema.findById(req.params.id)
+    
+           if (findPost) {
+            res.status(200).json({
+                success : true,
+                message : "Successfully found post",
+                findPost
+            })
+           } else {
+            res.status(400).json({
+                success : false,
+                message : "Failed to find Posts.",
+                findPost
+            })
+           }
+
+        } else {
+            res.status(401).json({
+                success : false,
+                message : "invalidToken"
+            })
+        }
 
     } catch (error) {
         res.status(500).json({
@@ -40,6 +97,7 @@ posts.get("/:id", async(req, res)=>{
         })
     }
 })
+
 // GET POSTS WITH USER ID
 posts.get("/user/posts", async(req, res)=>{
     try {
@@ -85,8 +143,14 @@ posts.get("/user/posts", async(req, res)=>{
 })
 
 // CREATE POST WITH USER ID
-posts.post("/create/:user_id", async(req, res) => {
+posts.post("/create", async(req, res) => {
     try {
+    const headerKEy = process.env.JWT_HEADER
+    const secureKEy = process.env.JWT_SECREAT_KEY
+
+    const header = req.header(headerKEy)
+    const verify = jwt.verify(header, secureKEy)
+    if (verify) {
         const todayDate = new Date()
 
         var time = todayDate.getHours()
@@ -104,7 +168,7 @@ posts.post("/create/:user_id", async(req, res) => {
         const dateMonthYear = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear() + " " + time + ":" + minates + " " + amPm
 
         const createPost = new postSchema({
-            userId: req.params.user_id,
+            userId: verify.user_id,
             postTime: dateMonthYear,
             postHeading: req.body.post_heading,
             postText: req.body.post_text,
@@ -117,87 +181,13 @@ posts.post("/create/:user_id", async(req, res) => {
             message: "Succesfully created post",
             results
         })
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            error
-        })
-    }
-})
-
-// COMMENT CREATE WITH POST ID
-posts.post("/action/:id", async (req, res) => {
-    try {
-        const check = postActionSchema.findById({postId : req.params.id})
-
-   
-        if (check.length == 0) {
-
-            const options = new postActionSchema({
-                postId: req.params.id,
-                userId : req.body.user_id,
-                postLike : req.body.post_like,
-                postComment: req.body.post_comment,
-                postReport: req.body.post_report,
-            })
-            //  await options.save()
-            res.status(200).json({
-                success : true,
-                message : "created post actions",
-                // saveUpdateData
-            })
-
-        } else {
-            // check.postLike = req.body.post_like
-            // check.postComment = req.body.post_comment
-            // const saveUpdateData = await check.save()
-
-            res.status(200).json({
-                success : true,
-                message : "Updated post actions",
-                // saveUpdateData
-            })
-        }
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            error
-        })
-    }
-})
-posts.delete("/action/delete/:id", async(req, res)=>{
-    try {
-        const findComment = await postActionSchema.findByIdAndDelete(req.params.id)
-
-        res.status(200).json({
-            success : true,
-            message : "comment deleted",
-            findComment
-        })
-        
-    } catch (error) {
-        res.status(500).json({
+    } else {
+        res.status(401).json({
             success : false,
-            error
+            message : "invalidToken"
         })
     }
-})
-
-// LIKE UPDATER 
-posts.put("/likes/:post_id", async(req, res) => {
-    try {
-
-        const results = await postSchema.findByIdAndUpdate(req.params.post_id)
-        results.postLikes = req.body.post_like;
-        const updateLikes = await results.save()
-
-        res.status(200).json({
-            success : true,
-            message : "updated post",
-            updateLikes
-        })
+       
 
     } catch (error) {
         res.status(500).json({

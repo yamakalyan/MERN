@@ -5,6 +5,7 @@ const db = require("./Database/mongoDb")
 const users = require("./Controllers/users")
 const cors = require("cors")
 const post = require("./Controllers/posts")
+const actions = require("./Controllers/postActions")
 
 app.use(cors({origin : "*"}))
 
@@ -23,3 +24,4 @@ app.use(express.json())
 
 app.use("/user", users)
 app.use("/post", post)
+app.use("/actions", actions)

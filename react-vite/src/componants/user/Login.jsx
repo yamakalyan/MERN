@@ -6,6 +6,7 @@ export default function Login() {
   const [email, setEmail]= useState("")
   const [password, setPassword] = useState("")
   const navigator = useNavigate()
+  const [msg,setMsg] = useState("")
 
 
   const loginUser =(e)=>{
@@ -25,9 +26,12 @@ export default function Login() {
         if (data.success) {
           localStorage.setItem("token",data.token)
           navigator("/")
+          window.location.reload(false)
+          setMsg(data.message)
         } else {
           localStorage.removeItem("token")
           navigator("/login")
+          setMsg(data.message)
         }
       })
     }
@@ -38,6 +42,7 @@ export default function Login() {
       <div className="container-box">
         <div className="input-list">
           <h3 className="input-title">Login</h3><hr/>
+          <p>{msg}</p>
           <form onSubmit={loginUser}>
             <div className="input-text">
               <input type="text" placeholder="Enter user name" onChange={(e)=>setEmail(e.target.value)} required/>

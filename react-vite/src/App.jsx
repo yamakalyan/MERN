@@ -10,6 +10,8 @@ import Profile from "./componants/user/Profile";
 import Posts from "./componants/user/Posts";
 import { AuthProvider } from "./componants/Authentications/AuthProvider";
 import Authentication from "./componants/Authentications/Authentication";
+import CreatePost from "./componants/user/CreatePost";
+import UniquePost from "./componants/user/post/UniquePost.jsx";
 
 function App() {
 
@@ -21,10 +23,22 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/info" element={<Info />}></Route>
+
             <Route path="/posts" element={<Authentication>
               <Posts />
               </Authentication>
               }></Route>
+
+            <Route path="/post/:id" element={<Authentication>
+              <UniquePost />
+              </Authentication>
+              }></Route>
+
+            <Route path="/createpost" element={<Authentication>
+              <CreatePost />
+              </Authentication>
+              }></Route>
+
             <Route path="/login" element={<Login />}></Route>
             <Route path="/reg" element={<Reg />}></Route>
             <Route
@@ -34,7 +48,8 @@ function App() {
                   <Profile />
                 </Authentication>
               }
-            ></Route>
+            >
+            </Route>
           </Routes>
           <About />
         </AuthProvider>

@@ -1,6 +1,7 @@
 const express = require("express")
 const user = express.Router()
 const userSchema = require("../models/usersModel")
+const followingSchema = require("../models/userFollowingModel")
 const jwt = require("jsonwebtoken")
 
 // LIST OF USERS
@@ -24,7 +25,7 @@ user.get("/", async (req, res) => {
 })
 
 // UNIQUE USER WITH PARAMS ID
-user.get("/:id", async (req, res) => {
+user.get("/by/:id", async (req, res) => {
     try {
         const headerKey = process.env.JWT_HEADER
         const secureKey = process.env.JWT_SECREAT_KEY
@@ -32,7 +33,7 @@ user.get("/:id", async (req, res) => {
         const header = req.header(headerKey)
         const verify = jwt.verify(header, secureKey)
 
-        if (verify){
+        if (verify) {
             const userID = verify.user_id
             const getUserWithId = await userSchema.findById(userID)
 
@@ -41,7 +42,7 @@ user.get("/:id", async (req, res) => {
                 message: "User found succesfully",
                 getUserWithId
             })
-        }else{
+        } else {
             res.status(500).json({
                 success: false,
                 error
@@ -66,7 +67,7 @@ user.get("/user/profile", async (req, res) => {
         const header = req.header(headerKey)
         const verify = jwt.verify(header, secureKey)
 
-        if (verify){
+        if (verify) {
             const userID = verify.user_id
             const profile = await userSchema.findById(userID)
 
@@ -75,10 +76,10 @@ user.get("/user/profile", async (req, res) => {
                 message: "User found",
                 profile
             })
-        }else{
+        } else {
             res.status(500).json({
                 success: false,
-                message : "InvalidToken"
+                message: "InvalidToken"
             })
         }
 
@@ -117,7 +118,6 @@ user.post("/create", async (req, res) => {
                 res.status(400).json({
                     success: false,
                     message: "User mobile already exist, Try new another",
-                    checkingMobile
                 })
             }
 
@@ -125,7 +125,6 @@ user.post("/create", async (req, res) => {
             res.status(400).json({
                 success: false,
                 message: "User email already exist, Try new another",
-                checkingUSer
             })
 
         }
@@ -183,14 +182,14 @@ user.delete("/delete/:id", async (req, res) => {
 })
 
 // LOGIN USER
-user.post("/login", async(req, res)=>{
-    try{
-        const check = await userSchema.find({email : req.body.email})
+user.post("/login", async (req, res) => {
+    try {
+        const check = await userSchema.find({ email: req.body.email })
 
         if (check.length == 0) {
             res.status(400).json({
-                success : false,
-                message : "Please enter correct email or Register."
+                success: false,
+                message: "Please enter correct email or Register."
             })
         } else {
             const takingPAssword = check[0].password
@@ -198,40 +197,40 @@ user.post("/login", async(req, res)=>{
             if (takingPAssword == req.body.password) {
 
                 const user = {
-                    time : Date(),
-                    user_id : check[0]._id,
-                    name : check[0].name,
-                    email : check[0].email,
-                    mobile : check[0].mobile
+                    time: Date(),
+                    user_id: check[0]._id,
+                    name: check[0].name,
+                    email: check[0].email,
+                    mobile: check[0].mobile
                 }
 
-                const token = jwt.sign(user, process.env.JWT_SECREAT_KEY, {expiresIn : process.env.JWT_EXPIREIN})
+                const token = jwt.sign(user, process.env.JWT_SECREAT_KEY, { expiresIn: process.env.JWT_EXPIREIN })
 
                 res.status(200).json({
-                    success : true,
-                    message : "Login succesfully",
+                    success: true,
+                    message: "Login succesfully",
                     check,
                     token
                 })
             } else {
                 res.status(400).json({
-                    success : false,
-                    message : "Incorrect password"
+                    success: false,
+                    message: "Incorrect password"
                 })
             }
         }
 
     }
-    catch(error){
+    catch (error) {
         res.status(500).json({
-            success : false,
+            success: false,
             error
         })
     }
 })
 
 // AUTHENTICATION
-user.post("/auth", async(req, res)=>{
+user.post("/auth", async (req, res) => {
     try {
         const headerKey = process.env.JWT_HEADER
         const secureKey = process.env.JWT_SECREAT_KEY
@@ -243,28 +242,185 @@ user.post("/auth", async(req, res)=>{
 
             const email = verify.email
             const mobile = verify.mobile
-            const usercheck = await userSchema.find({email : email , mobile : mobile})
+            const usercheck = await userSchema.find({ email: email, mobile: mobile })
 
             res.status(200).json({
-                success : true,
-                message : "User successfully authenicated",
+                success: true,
+                message: "User successfully authenicated",
                 usercheck
             })
 
         } else {
             res.status(401).json({
-                success : false,
-                message : "invalidToken"
+                success: false,
+                message: "invalidToken"
             })
 
         }
-    } catch (error){
+    } catch (error) {
         res.status(500).json({
-            success : false,
+            success: false,
             error
         })
 
     }
 })
 
+// USER FOLLOW UNFOLLOW CREATION
+user.post("/following", async (req, res) => {
+    try {
+        const headerKEy = process.env.JWT_HEADER
+        const secureKEy = process.env.JWT_SECREAT_KEY
+
+        const header = req.header(headerKEy)
+        const verify = jwt.verify(header, secureKEy)
+        if (verify) {
+            const checkFollowing = await followingSchema.findOne({ followinguserId: req.body.user_id })
+
+            if (checkFollowing) {
+                const removingIfExists = await followingSchema.findByIdAndDelete({ _id: checkFollowing._id })
+
+                if (removingIfExists) {
+                    res.status(200).json({
+                        success: true,
+                        message: "removed",
+                    })
+                } else {
+                    res.status(400).json({
+                        success: false,
+                        message: "troubles",
+                    })
+                }
+            } else {
+                const creatingFollowing = new followingSchema({
+                    userId: verify.user_id,
+                    followinguserId: req.body.user_id
+                })
+                const saving = await creatingFollowing.save()
+
+                if (saving) {
+                    res.status(200).json({
+                        success: true,
+                        message: "saved",
+                    })
+                } else {
+                    res.status(400).json({
+                        success: false,
+                        message: "troubles",
+                    })
+                }
+            }
+        } else {
+            res.status(401).json({
+                success: false,
+                message: "invalidToken"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        })
+    }
+})
+
+user.get('/followlist', async (req, res) => {
+    try {
+        const headerKEy = process.env.JWT_HEADER
+        const secureKEy = process.env.JWT_SECREAT_KEY
+
+        const header = req.header(headerKEy)
+        const verify = jwt.verify(header, secureKEy)
+        if (verify) {
+
+            const userfollow = await followingSchema.find({userId : verify.user_id})
+            
+            if (userfollow.length != 0) {
+
+                res.status(200).json({
+                    success: false,
+                    message: "list found",
+                    userfollow
+                })
+
+            } else {
+
+                res.status(400).json({
+                    success: false,
+                    message: "no list",
+                })
+            }
+        } else {
+            res.status(401).json({
+                success: false,
+                message: "invalidToken"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        })
+    }
+})
+
+user.get('/homepage', async (req, res) => {
+    try {
+        const headerKEy = process.env.JWT_HEADER
+        const secureKEy = process.env.JWT_SECREAT_KEY
+
+        const header = req.header(headerKEy)
+        const verify = jwt.verify(header, secureKEy)
+
+        if (verify) {
+
+            const postsLooping =async(id)=>{
+                return new Promise((resolve, reject)=>{
+                    const getUserDetails = userSchema.findOne({_id : id })
+
+                    if (getUserDetails) {
+                        resolve(getUserDetails)
+                    } else {
+                        reject(getUserDetails)
+                        
+                    }
+                })
+            }
+            const userfollow = await followingSchema.find({userId : verify.user_id})
+
+            if (userfollow.length != 0) {
+
+                for (let i = 0; i < userfollow.length; i++) {
+                    
+                    const followingId = userfollow[i].followinguserId
+                    userfollow[i].userPosts = await postsLooping(followingId)
+                    
+                }
+
+                res.status(200).json({
+                    success: false,
+                    message: "list found",
+                    userfollow
+                })
+
+            } else {
+
+                res.status(400).json({
+                    success: false,
+                    message: "no list",
+                })
+            }
+        } else {
+            res.status(401).json({
+                success: false,
+                message: "invalidToken"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error
+        })
+    }
+})
 module.exports = user

@@ -1,24 +1,39 @@
+.new-feed{
+    text-align: center;
+}
 .container-home{
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    
 
-    .new-feed{
-        text-align: center;
-    }
     .box{
+        display: flex;
+        flex-wrap: wrap;
+       margin-left: auto;
         width: 1400px;
-        columns: 2;
+        gap: 30px;
+        // columns: 2;
+
+        @media only screen and (max-width : 768px) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
 
         
         .post{
+            width: 300px;
+            height: auto;
             .heading{
                 color: white;
             }
             color: #908E9B;
             border: 2px solid rgb(236, 176, 176);
-            padding: 5%;
+            padding: 3%;
             margin-bottom: 15px;
             border-radius: 15px;
             

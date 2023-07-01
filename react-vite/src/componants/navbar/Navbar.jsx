@@ -37,6 +37,9 @@ export default function Navbar() {
                       <NavLink to="/profile">Profile</NavLink>
                     </li>
                     <li>
+                      <NavLink to="/createpost">Create Post</NavLink>
+                    </li>
+                    <li>
                       <NavLink to="/posts">My Posts</NavLink>
                     </li>
                   </>

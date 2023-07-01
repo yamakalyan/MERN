@@ -10,7 +10,6 @@ export  const AuthProvider = ({children})=> {
 
     useEffect(()=>{
         if (token !== null || undefined) {
-            
         const authentication = async()=>{
 
             await fetch("http://localhost:3500/user/auth", {
@@ -23,12 +22,15 @@ export  const AuthProvider = ({children})=> {
                     setUser(data.success)
                 } else {
                     setUser(data.success)
+                    localStorage.removeItem("token")
+                    navigator("/login")
                 }
             })
         }
        return ()=> authentication()
     }else{
         navigator("/")
+        localStorage.removeItem("token")
     }
     }, [])
     
